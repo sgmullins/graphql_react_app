@@ -4,13 +4,16 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const graphqlHttp = require("express-graphql");
 const mongoose = require("mongoose");
-
+const isAuth = require("./middleware/is-auth");
 const graphQLSchema = require("./graphql/schema/index");
 const graphQLResolvers = require("./graphql/resolvers/index");
 
 const app = express();
 
 app.use(bodyParser.json());
+
+//middleware userauth/ runs on every incomming request(how graphql does this)
+app.use(isAuth);
 
 //configure http to know where to find schemas and resolvers, this is a graphlql spec and is required. ! makes the data un nullable(required)
 app.use(
