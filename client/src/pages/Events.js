@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./Events.css";
-import Modal from "../components/Modal/Modal";
+import WindowsModal from "../components/Modal/windowsModal/WindowsModal";
 import Backdrop from "../components/Backdrop/Backdrop";
 import AuthContext from "../context/auth-context";
 import EventList from "../components/Events/EventList/EventList";
@@ -200,7 +200,7 @@ export default class Events extends Component {
       <React.Fragment>
         {(this.state.creating || this.state.selectedEvent) && <Backdrop />}
         {this.state.creating && (
-          <Modal
+          <WindowsModal
             title="Add Event"
             canCancel
             canConfirm
@@ -231,10 +231,10 @@ export default class Events extends Component {
                 ></textarea>
               </div>
             </form>
-          </Modal>
+          </WindowsModal>
         )}
         {this.state.selectedEvent && (
-          <Modal
+          <WindowsModal
             title={this.state.selectedEvent.title}
             canCancel
             canConfirm
@@ -248,7 +248,7 @@ export default class Events extends Component {
               {new Date(this.state.selectedEvent.date).toLocaleDateString()}
             </h2>
             <p>{this.state.selectedEvent.description}</p>
-          </Modal>
+          </WindowsModal>
         )}
         {this.context.token && (
           <div className="events-control">

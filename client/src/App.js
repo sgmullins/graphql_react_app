@@ -33,6 +33,7 @@ class App extends Component {
               }}
             >
               <MainNavigation />
+
               <main className="main-content">
                 <Switch>
                   {this.state.token && <Redirect from="/" to="/events" exact />}
