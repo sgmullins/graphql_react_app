@@ -13,7 +13,7 @@ export default class Events extends Component {
     isLoading: false,
     selectedEvent: null
   };
-
+  isActive = true;
   static contextType = AuthContext;
 
   constructor(props) {
@@ -133,12 +133,16 @@ export default class Events extends Component {
       })
       .then(resData => {
         const events = resData.data.events;
-        this.setState({ events: events });
-        this.setState({ isLoading: false });
+        if (this.isActive) {
+          this.setState({ events: events });
+          this.setState({ isLoading: false });
+        }
       })
       .catch(err => {
         console.log(err);
-        this.setState({ isLoading: false });
+        if (this.isActive) {
+          this.setState({ isLoading: false });
+        }
       });
   }
 
@@ -148,7 +152,48 @@ export default class Events extends Component {
       return { selectedEvent: selectedEvent };
     });
   };
-  handleBookEvent = () => {};
+  handleBookEvent = () => {
+    if (!this.context.token) {
+      this.setState({ selectedEvent: null });
+      return;
+    }
+    const requestBody = {
+      query: `
+        mutation{
+          bookEvent(eventId: "${this.state.selectedEvent._id}") {
+            _id
+            createdAt
+            updatedAt
+          }
+        }
+      `
+    };
+    const token = this.context.token;
+    fetch("http://localhost:3030/graphql", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("Failed");
+        }
+        return res.json();
+      })
+      .then(resData => {
+        console.log(resData);
+        this.setState({ selectedEvent: null });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  componentWillUnmount() {
+    this.isActive = false;
+  }
 
   render() {
     return (
@@ -195,7 +240,7 @@ export default class Events extends Component {
             canConfirm
             onCancel={this.handleModalCancel}
             onConfirm={this.handleBookEvent}
-            confirmText="Book Event"
+            confirmText={this.context.token ? "Book Event" : "Confirm"}
           >
             <h1>{this.state.selectedEvent.title}</h1>
             <h2>
