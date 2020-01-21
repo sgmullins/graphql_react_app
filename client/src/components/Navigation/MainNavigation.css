@@ -16,17 +16,28 @@
   display: flex;
   list-style: none;
   padding: 0;
+  align-items: center;
 }
 .main-navigation_items li {
   margin: 0 1rem;
 }
-.main-navigation_items a {
+.main-navigation_items a,
+.main-navigation_items button {
   text-decoration: none;
   color: rgb(12, 12, 12);
+  padding: 0.25rem 0.25rem;
+  border: none;
+  font: inherit;
+  background: transparent;
+  cursor: pointer;
+  vertical-align: middle;
+  margin: 0;
 }
 .main-navigation_items a:hover,
 .main-navigation_items a:active,
-.main-navigation_items a.active {
+.main-navigation_items a.active,
+.main-navigation_items button:hover,
+.main-navigation_items button:active {
   color: palegreen;
 }
 

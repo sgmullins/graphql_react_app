@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Auth.css";
+import AuthContext from "../context/auth-context";
 
 export default class AuthPage extends Component {
   state = {
@@ -10,6 +11,7 @@ export default class AuthPage extends Component {
     this.emailEl = React.createRef();
     this.passwordEl = React.createRef();
   }
+  static contextType = AuthContext;
 
   handleSwitchMode = () => {
     this.setState(prevState => {
@@ -63,7 +65,13 @@ export default class AuthPage extends Component {
         return res.json();
       })
       .then(resData => {
-        console.log(resData);
+        if (resData.data.login.token) {
+          this.context.login(
+            resData.data.login.token,
+            resData.data.login.userId,
+            resData.data.login.tokenExpiration
+          );
+        }
       })
 
       .catch(err => {
