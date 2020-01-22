@@ -14,6 +14,12 @@ const userLoader = new DataLoader(userIds => {
 const events = async eventIds => {
   try {
     const events = await Event.find({ _id: { $in: eventIds } });
+    //sorting to ensure that eventIds are returned in the correct order for Dataloader
+    events.sort((a, b) => {
+      return (
+        eventIds.indexOf(a._id.toString()) - eventIds.indexOf(b._id.toString())
+      );
+    });
     return events.map(event => {
       return transformEvent(event);
     });
@@ -35,7 +41,7 @@ const user = async userId => {
     return {
       ...user._doc,
       _id: user.id,
-      createdEvents: eventLoader.load.bind(this, user._doc.createdEvents)
+      createdEvents: () => eventLoader.loadMany(user._doc.createdEvents)
     };
   } catch (err) {
     throw err;
