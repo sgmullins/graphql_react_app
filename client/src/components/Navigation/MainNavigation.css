@@ -8,9 +8,10 @@
   padding: 0 1rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 .main-navigation_items {
-  margin-left: 1.5rem;
+  margin-right: 2.5rem;
 }
 .main-navigation_items ul {
   display: flex;
